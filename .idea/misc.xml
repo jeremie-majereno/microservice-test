@@ -7,6 +7,8 @@
         <option value="$PROJECT_DIR$/config-server/pom.xml" />
         <option value="$PROJECT_DIR$/descrovery/pom.xml" />
         <option value="$PROJECT_DIR$/customer/pom.xml" />
+        <option value="$PROJECT_DIR$/transaction/pom.xml" />
+        <option value="$PROJECT_DIR$/acount/pom.xml" />
       </list>
     </option>
   </component>

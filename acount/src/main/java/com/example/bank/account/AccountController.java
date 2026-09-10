@@ -38,8 +38,8 @@ public class AccountController {
     }
 
     @PostMapping("/{id}/withdraw")
-    public ResponseEntity<WithdrawResponse> withdraw(@PathVariable("id") Long id, WithdrawRequest request){
-        return ResponseEntity.ok(accountService.withdraw(id,request));
+    public ResponseEntity<WithdrawResponse> withdraw(@PathVariable("id")  WithdrawRequest request){
+        return ResponseEntity.ok(accountService.withdraw(request));
     }
 
 }
