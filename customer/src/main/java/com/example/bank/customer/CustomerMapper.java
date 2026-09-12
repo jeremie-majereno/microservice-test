@@ -2,19 +2,19 @@ package com.example.bank.customer;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class CustomerMapper {
 
-    public CustomerReponse fromCustomer(Customer customer){
-        return new CustomerReponse(
+    public CustomerResponse fromCustomer(Customer customer){
+        return new CustomerResponse(
+                customer.getId(),
                 customer.getFirstname(),
                 customer.getLastname(),
-                customer.getEmail(),
-                customer.getStatus()
+                customer.getEmail()
+
         );
     }
 
@@ -23,23 +23,21 @@ public class CustomerMapper {
                 .email(request.email())
                 .firstname(request.firstname())
                 .lastname(request.lastname())
-                .password(request.password())
-                .status(request.status())
                 .build();
     }
 
 
 
-    public List<CustomerReponse> findAll(List<Customer> customers){
+    public List<CustomerResponse> findAll(List<Customer> customers){
 
         if(customers.isEmpty()) return null;
 
-        List<CustomerReponse> reponses = customers.stream()
-                .map(customer -> new CustomerReponse(
+        List<CustomerResponse> reponses = customers.stream()
+                .map(customer -> new CustomerResponse(
+                        customer.getId(),
                         customer.getFirstname(),
                         customer.getLastname(),
-                        customer.getEmail(),
-                        customer.getStatus()
+                        customer.getEmail()
                 )).collect(Collectors.toList());
 
         return reponses;

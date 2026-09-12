@@ -4,8 +4,8 @@ package com.example.bank.account;
 import com.example.bank.customer.CustomerResponse;
 import com.example.bank.transaction.DepositRequest;
 import com.example.bank.transaction.DepositResponse;
-import com.example.bank.transaction.WithdrawRequest;
-import com.example.bank.transaction.WithdrawResponse;
+import com.example.bank.transaction.TransferRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/accounts")
 public class AccountController {
 
-    private AccountService accountService;
+    private  final AccountService accountService;
 
     @PostMapping
-    public ResponseEntity<AccountResponse> createAccount (AccountRequest request){
+    public ResponseEntity<AccountResponse> createAccount (@Valid @RequestBody AccountRequest request){
         return ResponseEntity.ok(accountService.create(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountResponse> findById (@PathVariable("lid") Long accountId){
+    public ResponseEntity<AccountResponse> findById (@PathVariable("id") Long accountId){
         return ResponseEntity.ok(accountService.findAccountById(accountId));
     }
 
@@ -32,14 +32,19 @@ public class AccountController {
         return ResponseEntity.ok(accountService.findCustomerById(customerId));
     }
 
-    @PostMapping("/{id}/deposit")
-    public ResponseEntity<DepositResponse> deposit(@PathVariable("id") Long id, DepositRequest request){
-        return ResponseEntity.ok(accountService.deposit(id,request));
+    @PostMapping("/deposit")
+    public ResponseEntity<DepositResponse> deposit(@RequestBody DepositRequest request){
+        return ResponseEntity.ok(accountService.deposit(request));
     }
 
-    @PostMapping("/{id}/withdraw")
-    public ResponseEntity<WithdrawResponse> withdraw(@PathVariable("id")  WithdrawRequest request){
+    @PostMapping("/withdraw")
+    public ResponseEntity<DepositResponse> withdraw(@RequestBody  DepositRequest request){
         return ResponseEntity.ok(accountService.withdraw(request));
     }
 
+    @PostMapping("/transfer")
+    public ResponseEntity<?> transfer(
+          @Valid  @RequestBody TransferRequest request){
+        return ResponseEntity.ok(accountService.transfer(request));
+    }
 }

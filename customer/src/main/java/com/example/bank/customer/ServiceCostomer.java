@@ -1,20 +1,19 @@
 package com.example.bank.customer;
 
-import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
 @Service
-@RestControllerAdvice
+@RequiredArgsConstructor
 public class ServiceCostomer {
 
 
-    private RepositoryCustomer repositoryCustomer;
-    private CustomerMapper mapper;
+    private  final RepositoryCustomer repositoryCustomer;
+    private  final CustomerMapper mapper;
 
-    public CustomerReponse create(CustomerRequest request) {
+    public CustomerResponse create(CustomerRequest request) {
         var check = repositoryCustomer
                 .findByEmail(request.email())
                 .isPresent();
@@ -24,16 +23,14 @@ public class ServiceCostomer {
         }
 
         var customer = repositoryCustomer.save(mapper.toCustomer(request));
-        var response = mapper.fromCustomer(customer);
-        return response;
+        return mapper.fromCustomer(customer);
     }
 
     public void remove(Long id) {
         repositoryCustomer.deleteById(id);
     }
 
-    public CustomerReponse findCustomerId( Long id) {
-
+    public CustomerResponse findCustomerId(Long id) {
         var customer = repositoryCustomer.findById(id)
                 .map(mapper::fromCustomer)
                 .orElseThrow(()->new CustomerException("customer not find"));
@@ -41,7 +38,7 @@ public class ServiceCostomer {
         return customer;
     }
 
-    public List<CustomerReponse> findAll() {
+    public List<CustomerResponse> findAll() {
         var customers = repositoryCustomer.findAll();
         return mapper.findAll(customers);
     }

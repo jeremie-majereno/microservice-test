@@ -2,37 +2,38 @@ package com.example.bank.customer;
 
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RestControllerAdvice
-@RequestMapping("/api/v1/customer")
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/customers")
 public class ControllerCustomer {
 
-    private ServiceCostomer serviceCostomer;
+    private final ServiceCostomer serviceCostomer;
 
     @PostMapping
-    public ResponseEntity<CustomerReponse> create (@Valid @RequestBody  CustomerRequest request){
+    public ResponseEntity<CustomerResponse> create (@Valid @RequestBody  CustomerRequest request){
         return ResponseEntity.ok(serviceCostomer.create(request));
     }
 
-    @DeleteMapping()
-    public ResponseEntity<Void> remode(Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remode(@PathVariable("id") Long id){
         serviceCostomer.remove(id);
         return ResponseEntity.accepted().build();
     }
 
 
     @GetMapping("/{customer-id}")
-    public ResponseEntity<CustomerReponse> findById(@Valid @RequestBody Long id){
+    public ResponseEntity<CustomerResponse> findById(@PathVariable("customer-id") Long id){
         return ResponseEntity.ok(serviceCostomer.findCustomerId(id));
     }
 
     @GetMapping("/find-customers")
-    public ResponseEntity<List<CustomerReponse>> findAll(){
+    public ResponseEntity<List<CustomerResponse>> findAll(){
         return ResponseEntity.ok(serviceCostomer.findAll());
     }
 

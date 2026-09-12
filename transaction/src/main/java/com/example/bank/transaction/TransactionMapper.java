@@ -15,11 +15,11 @@ public class TransactionMapper {
     public Transaction toTransaction(TransactionRequest request){
         return Transaction.builder()
                 .accountId(request.accountId())
-                .transferId("--")
+                .transferId(request.transferId())
                 .type(request.type())
                 .amount(request.amount())
                 .balanceAfter(request.balanceAfter())
-                .createdAt(LocalDateTime.now())
+                .createdAt(request.createAt())
                 .build();
     }
 

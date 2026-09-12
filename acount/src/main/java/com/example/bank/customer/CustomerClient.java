@@ -12,6 +12,6 @@ import java.util.Optional;
 @FeignClient(name = "customer-service")
 public interface CustomerClient {
 
-    @GetMapping("/api/v1/customers/{customer-id}")
-    Optional<CustomerResponse> findCustomerById(@PathVariable("customer-id") Long customerId) ;
+    @GetMapping("/api/v1/customers/{id}")
+    Optional<CustomerResponse> findCustomerById(@PathVariable("id") Long customerId) ;
 }

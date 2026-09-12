@@ -16,12 +16,14 @@ public class TransactionController {
     private final TransactionService service;
 
     @PostMapping
-    public ResponseEntity<TransactionResponse> create(
-            @RequestBody TransactionRequest request
+    public ResponseEntity<Void> create(
+          @Valid  @RequestBody TransactionRequest request
     ) {
+
+        service.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.create(request));
+                .build();
     }
 
     @GetMapping("/account/{accountId}")
@@ -42,10 +44,11 @@ public class TransactionController {
         );
     }
 
-    @PostMapping("/api/v1/transactions/transfer")
-    public ResponseEntity<TransactionResponse> doTransf (@Valid @RequestBody TransferRequet requet){
+    @PostMapping("/transfer")
+    public ResponseEntity<Void> doTransf (@Valid @RequestBody TransferRequet requet){
+        service.doTransfer(requet);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.doTransfer(requet));
+                .build();
     }
 }

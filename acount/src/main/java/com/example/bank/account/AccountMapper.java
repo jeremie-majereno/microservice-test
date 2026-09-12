@@ -5,16 +5,17 @@ import com.example.bank.transaction.Deposit;
 import com.example.bank.transaction.DepositRequest;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class AccountMapper {
 
     public Account toAccount (AccountRequest request){
         return Account.builder()
-                .accountNumber(request.accountNumber())
-                .balance(request.balance())
+                .balance(BigDecimal.ZERO)
                 .customerId(request.customerId())
-                .status(request.status())
-                .type(request.type())
+                .status(Status.ADMIN)
+                .type(Type.VISA)
                 .build();
     }
 

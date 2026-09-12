@@ -7,9 +7,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="config-server" />
+        <module name="gatewey" />
         <module name="descrovery" />
       </profile>
-      <profile name="Annotation profile for transaction" enabled="true">
+      <profile name="Annotation profile for customer" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -17,8 +18,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="transaction" />
-        <module name="acount" />
         <module name="customer" />
+        <module name="acount" />
       </profile>
     </annotationProcessing>
   </component>
@@ -28,6 +29,7 @@
       <module name="config-server" options="-parameters" />
       <module name="customer" options="-parameters" />
       <module name="descrovery" options="-parameters" />
+      <module name="gatewey" options="-parameters" />
       <module name="transaction" options="-parameters" />
     </option>
   </component>

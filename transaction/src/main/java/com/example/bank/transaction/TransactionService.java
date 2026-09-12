@@ -20,15 +20,12 @@ public class TransactionService {
     private final TransactionMapper mapper;
 
 
-    public TransactionResponse create(TransactionRequest request) {
+    public void create(TransactionRequest request) {
         validation(request.amount());
-
         Transaction transaction = mapper.toTransaction(request);
+        repository.save(transaction);
 
-        Transaction saveTransaction = repository.save(transaction);
-
-
-        return mapper.fromTransaction(saveTransaction);
+        //  return mapper.fromTransaction(saveTransaction);
     }
 
     public List<TransactionResponse> findByAccountId(Long accountId) {
@@ -40,30 +37,29 @@ public class TransactionService {
 
     public TransactionResponse findById(Long id) {
         Transaction transaction = repository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Transaction  not found"));
+                .orElseThrow(() -> new RuntimeException("Transaction  not found"));
 
         return mapper.fromTransaction(transaction);
     }
 
-    public void validation(BigDecimal amount){
-        if(amount== null){
+    public void validation(BigDecimal amount) {
+        if (amount == null) {
             throw new RuntimeException("amount cannot be null");
         }
-
-        if(amount.compareTo(BigDecimal.ZERO)>0){
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("amount should be positive");
         }
     }
 
-    public TransactionResponse doTransfer(TransferRequet requet){
+    public void doTransfer(TransferRequet requet) {
 
         validation(requet.amount());
 
         Transaction senderTrans = mapper.toSenderTransfer(requet);
         Transaction receiverTrans = mapper.toReceiverTransfer(requet);
 
-        var responser  = repository.save(senderTrans);
+        repository.save(senderTrans);
         repository.save(receiverTrans);
-        return mapper.fromTransaction(responser);
+        //   return mapper.fromTransaction(responser);
     }
 }

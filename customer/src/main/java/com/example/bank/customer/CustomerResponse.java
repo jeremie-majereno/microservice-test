@@ -1,10 +1,10 @@
 package com.example.bank.customer;
 
-public record CustomerReponse(
+public record CustomerResponse(
+        Long customerId,
         String firstname,
         String lastname,
-        String email,
-        String status
+        String email
 
 
 ) {

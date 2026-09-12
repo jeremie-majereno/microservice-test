@@ -31,13 +31,19 @@ public class AccountService {
                         new AccountException("Customer not found: " + request.customerId())
                 );
 
+        //to check if the customer have another account
+        var check = accountRepository.existsByCustomerId(request.customerId());
+
+
         //Créer le compte
         Account account = accountMapper.toAccount(request);
+
 
         //Initialiser le solde
         if (account.getBalance() == null || account.getBalance() != null) {
             account.setBalance(BigDecimal.ZERO);
         }
+        account.setAccountNumber(UUID.randomUUID().toString());
 
         Account savedAccount = accountRepository.save(account);
         return accountMapper.fromAccount(savedAccount, customer);
@@ -73,11 +79,11 @@ public class AccountService {
 
 
     @Transactional
-    public DepositResponse deposit(Long accountId, DepositRequest request) {
+    public DepositResponse deposit(DepositRequest request) {
 
-        Account account = accountRepository.findById(accountId)
+        Account account = accountRepository.findById(request.accountId())
                 .orElseThrow(() ->
-                        new AccountException("Account not found: " + accountId)
+                        new AccountException("Account not found: " + request.accountId())
                 );
 
         BigDecimal amount = request.amount();
@@ -87,10 +93,17 @@ public class AccountService {
 
         // Ajouter l'argent
         BigDecimal newBalance = account.getBalance().add(amount);
-
         account.setBalance(newBalance);
+        var saveAccount = accountRepository.save(account);
 
-        accountRepository.save(account);
+        transactionClient.transactionSave(new TransactionRequest(
+              saveAccount.getId(),
+              "--",
+              TransactionType.DEPOSIT,
+              amount,
+              newBalance,
+              LocalDateTime.now()
+        ));
 
         return new DepositResponse(
                 amount,
@@ -100,7 +113,7 @@ public class AccountService {
 
 
     @Transactional
-    public WithdrawResponse withdraw(WithdrawRequest request) {
+    public DepositResponse withdraw(DepositRequest request) {
 
         Account account = accountRepository.findById(request.accountId())
                 .orElseThrow(() ->
@@ -113,24 +126,28 @@ public class AccountService {
 
         // Vérifier le montant
         validateAmount(amount);
-
         BigDecimal currentBalance = account.getBalance();
 
-        // Vérifier le solde
-        if (currentBalance.compareTo(amount) < 0) {
+        if (currentBalance.compareTo(amount) <= 0) {
             throw new AccountException(
                     "Insufficient balance. Current balance: " + currentBalance
             );
         }
 
-        // Retirer l'argent
         BigDecimal newBalance = currentBalance.subtract(amount);
-
         account.setBalance(newBalance);
+        var saveAccount = accountRepository.save(account);
 
-        accountRepository.save(account);
+        transactionClient.transactionSave(new TransactionRequest(
+                saveAccount.getId(),
+                "--",
+                TransactionType.WITHDRAW,
+                amount,
+                newBalance,
+                LocalDateTime.now()
+        ));
 
-        return new WithdrawResponse(
+        return new DepositResponse(
                 amount,
                 "SUCCESS"
         );
@@ -162,7 +179,7 @@ public class AccountService {
         //check if the sender can send this amount
         BigDecimal senderAmount = sender.getBalance();
         BigDecimal amount = request.amount();
-        if (senderAmount.compareTo(amount) < 0) {
+        if (senderAmount.compareTo(amount) <= 0) {
             throw new AccountException(
                     "Insufficient balance. Current balance : "
             );

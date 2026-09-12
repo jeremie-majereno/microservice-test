@@ -6,16 +6,8 @@ import jakarta.persistence.Enumerated;
 import java.math.BigDecimal;
 
 public record AccountRequest(
+        Long customerId
 
-
-        String accountNumber,
-        Long customerId,
-        BigDecimal balance,
-
-        @Enumerated(EnumType.STRING)
-                Type type,
-        @Enumerated(EnumType.STRING)
-                Status status
 ) {
 
 }
